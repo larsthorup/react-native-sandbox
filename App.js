@@ -28,10 +28,16 @@ import {
 
 const App: () => React$Node = () => {
   const [operand, setOperand] = useState('0');
+  const [isResultEnabled, setIsResultEnabled] = useState(false);
   const [result, setResult] = useState('0');
+  const operandHandler = (value: string) => {
+    setOperand(value);
+    setIsResultEnabled(false);
+  };
   const pressHandler = () => {
     const value = parseInt(operand);
     setResult((value * value).toString());
+    setIsResultEnabled(true);
   };
   return (
     <>
@@ -40,7 +46,6 @@ const App: () => React$Node = () => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-          <Header />
           {global.HermesInternal == null ? null : (
             <View style={styles.engine}>
               <Text style={styles.footer}>Engine: Hermes</Text>
@@ -53,13 +58,23 @@ const App: () => React$Node = () => {
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Interact</Text>
               <TextInput
+                accessibilityLabel="Enter operand"
+                placeholder="Enter operand"
                 style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                onChangeText={setOperand}
+                onChangeText={operandHandler}
                 value={operand}
               />
-              <Button onPress={pressHandler} title="Calculate Square" />
-              <Text>Result</Text>
-              <Text>{result}</Text>
+              <Button
+                onPress={pressHandler}
+                accessbilityLabel="Calculate Square"
+                title="Calculate Square"
+              />
+              {isResultEnabled && (
+                <>
+                  <Text>Result</Text>
+                  <Text accessibilityLabel="Result">{result}</Text>
+                </>
+              )}
             </View>
           </View>
         </ScrollView>
